@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DVDbosss-ahh</title>
+</head>
+<body>
+  <script src="https://koda.nu/simple.js">
+
+    let ball = {
+      x: 200,
+      y: 200,
+      speed: 5,
+      size: 20,
+    }
+
+    let food = [];
+
+    for(let i = 0; i < 100; i++) {
+      food.push({
+        x: random(totalWidth),
+        y: random(totalHeight),
+        size: 3,
+        alive: true,
+      });
+    }
+
+    
+    function update() {
+      clearScreen();
+      circle(ball.x, ball.y, ball.size, 'red');
+      
+      food.map(food => {
+        if(food.alive) {
+          circle(food.x, food.y, food.size, 'green');
+
+          if(distance(ball, food) < ball.size+3) {
+            food.alive = false;
+            ball.size += 1;
+            ball.speed *= 0.99;
+          }
+        }
+      });
+
+      let dy = ball.speed*(mouse.y-ball.y)/distance(ball, mouse);
+      let dx = ball.speed*(mouse.x-ball.x)/distance(ball, mouse);
+
+      ball.y += dy;
+      ball.x += dx;
+
+    }
+  </script>
+</body>
+</html>
