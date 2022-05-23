@@ -1,56 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DVDbosss-ahh</title>
-</head>
-<body>
-  <script src="https://koda.nu/simple.js">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <title>DVDbosss-ahh</title>
+  </head>
+  <body>
+    <script src="https://koda.nu/simple.js">
 
-    let ball = {
-      x: 200,
-      y: 200,
-      speed: 5,
-      size: 20,
-    }
+      let balls = [
+        {
+          x: totalWidth / 2,
+          y: totalHeight / 2,
+          speed: 8,
+          size: 20,
+          color: 'red'
+        },
+      ];
 
-    let food = [];
+      // let ball = {
+      //   x: totalWidth / 2,
+      //   y: totalHeight / 2,
+      //   speed: 8,
+      //   size: 20,
+      // }
 
-    for(let i = 0; i < 100; i++) {
-      food.push({
-        x: random(totalWidth),
-        y: random(totalHeight),
-        size: 3,
-        alive: true,
-      });
-    }
 
-    
-    function update() {
-      clearScreen();
-      circle(ball.x, ball.y, ball.size, 'red');
-      
-      food.map(food => {
-        if(food.alive) {
-          circle(food.x, food.y, food.size, 'green');
+      let food = [];
 
-          if(distance(ball, food) < ball.size+3) {
-            food.alive = false;
-            ball.size += 1;
-            ball.speed *= 0.99;
+      for(let i = 0; i < 1000; i++) {
+        food.push({
+          x: random(totalWidth*5),
+          y: random(totalHeight*5),
+          size: 8,
+          alive: true,
+          color: '#' + Math.floor(Math.random() * 16777215).toString(16),
+        });
+      }
+
+
+      function update() {
+        clearScreen();
+
+        food.map(food => {
+          if(food.alive) {
+            circle(food.x, food.y, food.size, food.color);
+
+            balls.map(ball => {
+              if(distance(ball, food) < ball.size+3) {
+                food.alive = false;
+                ball.size += 1;
+                ball.speed *= 0.99;
+              }
+            })
           }
-        }
-      });
+        });
 
-      let dy = ball.speed*(mouse.y-ball.y)/distance(ball, mouse);
-      let dx = ball.speed*(mouse.x-ball.x)/distance(ball, mouse);
 
-      ball.y += dy;
-      ball.x += dx;
+        balls.forEach(ball => {
 
-    }
-  </script>
-</body>
+          circle(ball.x, ball.y, ball.size, ball.color);
+
+
+          let ballSize = (ball.size /2);
+
+          let dy = ball.speed*(mouse.y-ball.y)/distance(ball, mouse);
+          let dx = ball.speed*(mouse.x-ball.x)/distance(ball, mouse);
+
+          food.map(food => {
+            if(food.alive) {
+              food.y -= dy;
+              food.x -= dx;
+            }
+          });
+        })
+
+
+
+        // create another ball on space press and add it to the playground
+        window.addEventListener('keydown', function(e) {
+          if(e.keyCode == 32) {
+            let newBall = {
+              x: balls[0].x +100,
+              y: balls[0].y +100,
+              speed: 0,
+              size: balls[0].size,
+            }
+
+            balls.push(newBall);
+          }
+        });
+
+
+
+
+        // if (e.keyCode === 32) {
+        //   ball.speed *= 1.1;
+        // }
+      }
+    </script>
+  </body>
 </html>
